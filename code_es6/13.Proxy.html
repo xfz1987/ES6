@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<!-- <script src="13.Proxy.js"></script> -->
+</head>
+<body>
+	<script>
+		//下面的例子则是利用get拦截，实现一个生成各种DOM节点的通用函数dom
+const dom = new Proxy({}, {
+  get(target, property) { //{} div
+    return function(attrs = {}, ...children) {
+      const el = document.createElement(property);
+      //div
+      for (let prop of Object.keys(attrs)) {
+        el.setAttribute(prop, attrs[prop]);
+      }
+      for (let child of children) {
+        if (typeof child === 'string') {
+          child = document.createTextNode(child);
+        }
+        el.appendChild(child);
+      }
+      return el;
+    }
+  }
+});
+
+
+
+const el = dom.div({},
+  'Hello, my name is '
+  
+);
+
+document.body.appendChild(el);
+		
+	</script>
+</body>
+</html>
